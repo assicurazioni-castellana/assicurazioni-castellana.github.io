@@ -44,7 +44,7 @@ function Veicoli(props) {
             id: "#7"
         },
         {
-            label: "Casco",
+            label: "Kasko",
             id: "#8"
         }
     ];
@@ -211,7 +211,7 @@ function Veicoli(props) {
             <Select
                 options={tipiPoliza}
                 value={data.tipoPoliza}
-                placeholder="Tipo Polizza"
+                placeholder="Garanzie"
                 onChange={e=>changeTipoPoliza(e)}
             />
 
@@ -236,7 +236,7 @@ function Veicoli(props) {
                         backgroundColor: $checked ? $theme.colors.secondary : null,
                       }),
                     }}}
-            >Veicolo Già Assicurato</Checkbox>
+            >Veicolo Già Assicurato Presso Altra Compagnia</Checkbox>
 
             {/*CONSENT CHECKBOX*/}
 
