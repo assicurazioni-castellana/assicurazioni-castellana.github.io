@@ -13,7 +13,7 @@ import appData from '../data/data';
 import addConsent from '../controller/Firebase';
 
 function Casa(props) {
-    const [data,setData]=useState({dataNascita:"",cellulare:"+39",mail:"",citta:"",tipoCasa:[],annoCostruzione:"",mq2:"",consent:false});
+    const [data,setData]=useState({nome:"",cognome:"",dataNascita:"",cellulare:"+39",mail:"",luogoNascita:"",citta:"",tipoCasa:[],annoCostruzione:"",mq2:"",garanzie:[],consent:false});
     const [loading,setLoading]=useState(false);
 
     const tipiCase=[
@@ -26,6 +26,44 @@ function Casa(props) {
             id: "#2"
         }
     ];
+
+    const garanzie=[
+        {
+            label:"Incendio Fabbricato",
+            id:"#3"
+        },
+        {
+            label:"Incendio Contenuto",
+            id:"#4"
+        },
+        {
+            label:"Furto Contenuto",
+            id:"#5"
+        },
+        {
+            label:"Fenomeno Elettrico",
+            id:"#6"
+        },
+        {
+            label:"Assistenza Abitazione",
+            id:"#7"
+        },
+        {
+            label:"RC Fabbricato",
+            id:"#8"
+        },
+        {
+            label:"RD Famiglia",
+            id:"#9"
+        }
+    ];
+
+    const changeGaranzia=(params)=>{
+        setData({
+            ...data,
+            garanzie:params.value
+        })
+    }
 
     const checkData=(d)=>{
         if (Object.values(d).indexOf("")!=-1){
@@ -79,10 +117,12 @@ function Casa(props) {
             return
         }
 
-        const emailText="Nuovo Preventivo!<br>Mail: "+data.mail+"<br>Cellulare: "+data.cellulare+
-        "<br>Data Di Nascita: "+data.dataNascita+"<br><br>Dati della casa<br>↓  ↓   ↓<br><br>Citta: "+data.citta+"<br>Metri Quadri: "+data.mq2+
-        "<br>Anno di costruzione: "+data.annoCostruzione+"<br>Tipo Casa: "+data.tipoCasa[0].label
-        
+        var emailText="Nuovo Preventivo!<br>Mail: "+data.mail+"<br>Cellulare: "+data.cellulare+"<br>Nome: "+data.nome+"<br>Cognome: "+data.cognome+
+        "<br>Data Di Nascita: "+data.dataNascita+"<br>Luogo Di Nascita: "+data.luogoNascita+"<br><br>Dati della casa<br>↓  ↓   ↓<br><br>Citta: "+data.citta+"<br>Metri Quadri: "+data.mq2+
+        "<br>Anno di costruzione: "+data.annoCostruzione+"<br>Tipo Casa: "+data.tipoCasa[0].label+"<br>Garanzie:<br>"
+
+        data.garanzie.forEach(g=>emailText=emailText+"- "+g.label+"<br>")
+
         setLoading(true)
 
         //memorizza i consensi
@@ -121,6 +161,13 @@ function Casa(props) {
     return(
         <div className="h-min flex flex-row flex-wrap gap-7 content-start">
             <Divider text="DATI CLIENTE"/>
+
+            <TextField value={data.nome} onChange={e=>setData({...data,nome:e.target.value})} 
+            label="Nome" variant="filled" autoComplete='off'></TextField>
+
+            <TextField value={data.cognome} onChange={e=>setData({...data,cognome:e.target.value})} 
+            label="Cognome" variant="filled" autoComplete='off'></TextField>
+
             <ReactInputMask
                 mask="99/99/9999"
                 value={data.dataNascita} 
@@ -142,6 +189,26 @@ function Casa(props) {
 
             <TextField value={data.mail} onChange={e=>setData({...data,mail:e.target.value})} 
             label="Mail" variant="filled" autoComplete='off'></TextField>
+
+            <Autocomplete
+                disablePortal
+                options={cittaItaliane}
+                onBlur={()=>{return}}
+                filterOptions={(options, state) => {  //used to display cities autocomplete after typed 2 chars
+                    if (state.inputValue.length > 2) {
+                        return options.filter((item) =>
+                        String(item.label)
+                            .toLowerCase()
+                            .includes(state.inputValue.toLowerCase())
+                        );
+                    }
+                    return [];
+                }}
+                clearOnBlur={false}
+                sx={{ width: "30%" }}
+                renderInput={(params) => <TextField value={data.luogoNascita} onChange={e=>setData({...data,luogoNascita:e.target.value})} 
+                label="Luogo Di Nascita" variant="filled" autoComplete='off' {...params}></TextField>}
+            />
             
             <Divider text="DATI CASA"/>
 
@@ -176,6 +243,14 @@ function Casa(props) {
                 value={data.tipoCasa}
                 placeholder="Tipo Casa"
                 onChange={params=>setData({...data,tipoCasa:params.value})}
+            />
+
+            <Select
+                options={garanzie}
+                value={data.garanzie}
+                placeholder="Garanzie"
+                multi
+                onChange={e=>changeGaranzia(e)}
             />
             
             <div className='basis-full h-0'></div>

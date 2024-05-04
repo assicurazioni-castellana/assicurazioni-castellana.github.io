@@ -3,15 +3,16 @@ import ReactInputMask from 'react-input-mask';
 import { Select } from "baseui/select";
 import {Checkbox,LABEL_PLACEMENT} from "baseui/checkbox";
 import { useState } from "react";
-import { Button } from '@mui/material';
+import { Autocomplete, Button } from '@mui/material';
 import Divider from './utils/Divider';
 import { sendEmail } from '../controller/SendMail';
 import appData from '../data/data';
 import { Spinner } from 'baseui/spinner';
 import addConsent from '../controller/Firebase';
+import { cittaItaliane } from '../data/citta';
 
 function Veicoli(props) {
-    const [data,setData]=useState({dataNascita:"",cellulare:"+39",mail:"",targa:"",tipoPoliza:[],giaAssicurato:false,consent:false});
+    const [data,setData]=useState({nome:"",cognome:"",dataNascita:"",cellulare:"+39",mail:"",luogoNascita:"",targa:"",tipoPoliza:[],giaAssicurato:false,appenaAcquistato:false,targaAggancioBersani:"",consent:false});
     const [loading,setLoading]=useState(false)
 
     const tipiPoliza=[
@@ -91,7 +92,13 @@ function Veicoli(props) {
         })
     }
 
-    const checkData=(d)=>{
+    const checkData=(dat)=>{
+        var d={...dat}
+
+        if(!d.appenaAcquistato){
+            delete d.targaAggancioBersani
+        }
+
         if (Object.values(d).indexOf("")!=-1){
             props.setNotice("Riempi tutti i campi obbligatori")
             props.setShowNotice(true)
@@ -137,8 +144,15 @@ function Veicoli(props) {
             return
         }
 
-        const emailText="Nuovo Preventivo!<br>Mail: "+data.mail+"<br>Cellulare: "+data.cellulare+
-        "<br>Data Di Nascita: "+data.dataNascita+"<br><br>Dati del veicolo<br>↓  ↓   ↓<br><br>Targa: "+data.targa+"<br>Tipo Poliza<br>: "+data.tipoPoliza[0].label
+        var emailText="Nuovo Preventivo!<br>Mail: "+data.mail+"<br>Cellulare: "+data.cellulare+"<br>Nome: "+data.nome+"<br>Cognome: "+data.cognome+
+        "<br>Data Di Nascita: "+data.dataNascita+"<br>Luogo Di Nascita: "+data.luogoNascita+"<br><br>Dati del veicolo<br>↓  ↓   ↓<br><br>Targa: "+data.targa+"<br>Garanzie:<br>"
+
+        data.tipoPoliza.forEach(t=>emailText=emailText+"- "+t.label+"<br>")
+
+        if(data.appenaAcquistato){
+            emailText=emailText+"<br>Targa Aggancio Bersani: "+data.targaAggancioBersani
+        }
+
         setLoading(true)
 
         //memorizza i consensi
@@ -175,6 +189,13 @@ function Veicoli(props) {
     return(
         <div className="h-min flex flex-row flex-wrap gap-7 content-start">
             <Divider text="DATI CLIENTE"/>
+
+            <TextField value={data.nome} onChange={e=>setData({...data,nome:e.target.value})} 
+            label="Nome" variant="filled" autoComplete='off'></TextField>
+
+            <TextField value={data.cognome} onChange={e=>setData({...data,cognome:e.target.value})} 
+            label="Cognome" variant="filled" autoComplete='off'></TextField>
+
             <ReactInputMask
                 mask="99/99/9999"
                 value={data.dataNascita} 
@@ -196,6 +217,26 @@ function Veicoli(props) {
 
             <TextField value={data.mail} onChange={e=>changeEmail(e)} 
             label="Mail" variant="filled" autoComplete='off'></TextField>
+
+            <Autocomplete
+                disablePortal
+                options={cittaItaliane}
+                onBlur={()=>{return}}
+                filterOptions={(options, state) => {  //used to display cities autocomplete after typed 2 chars
+                    if (state.inputValue.length > 2) {
+                        return options.filter((item) =>
+                        String(item.label)
+                            .toLowerCase()
+                            .includes(state.inputValue.toLowerCase())
+                        );
+                    }
+                    return [];
+                }}
+                clearOnBlur={false}
+                sx={{ width: "30%" }}
+                renderInput={(params) => <TextField value={data.luogoNascita} onChange={e=>setData({...data,luogoNascita:e.target.value})} 
+                label="Luogo Di Nascita" variant="filled" autoComplete='off' {...params}></TextField>}
+            />
             
             <Divider text="DATI VEICOLO"/>
 
@@ -212,6 +253,7 @@ function Veicoli(props) {
                 options={tipiPoliza}
                 value={data.tipoPoliza}
                 placeholder="Garanzie"
+                multi
                 onChange={e=>changeTipoPoliza(e)}
             />
 
@@ -237,6 +279,30 @@ function Veicoli(props) {
                       }),
                     }}}
             >Veicolo Già Assicurato Presso Altra Compagnia</Checkbox>
+
+            <Checkbox
+                checked={data.appenaAcquistato}
+                onChange={e => setData({...data,appenaAcquistato:e.target.checked})}
+                labelPlacement={LABEL_PLACEMENT.right}
+                overrides={{
+                    Label: {
+                      style: ({ $theme }) => ({
+                        color: $theme.colors.secondary,
+                      }),
+                    },
+                    Checkmark: {
+                      style: ({ $checked, $theme }) => ({
+                        borderLeftColor: $theme.colors.secondary,
+                        borderRightColor: $theme.colors.secondary,
+                        borderTopColor: $theme.colors.secondary,
+                        borderBottomColor: $theme.colors.secondary,
+                        backgroundColor: $checked ? $theme.colors.secondary : null,
+                      }),
+                    }}}
+            >Veicolo Appena Acquistato</Checkbox>
+
+            {data.appenaAcquistato && <TextField value={data.targaAggancioBersani} onChange={e=>setData({...data,targaAggancioBersani:e.target.value})} 
+            label="Targa Aggancio Bersani" variant="filled" autoComplete='off'></TextField>}
 
             {/*CONSENT CHECKBOX*/}
 

@@ -64,7 +64,8 @@ div[data-baseweb="select"]{
   height: min-content;
   border-bottom:2px solid var(--secondary-color);
   outline: none;
-  width: 30%;
+  min-width: 30%;
+  width: auto;
   height: var(--input-height);
   background-color: rgb(241 245 249);
 }
@@ -138,4 +139,14 @@ i[role="progressbar"]{
   background-color: var(--secondary-color) !important;
   height: 5vh;
   box-shadow: none !important;
+}
+
+/*BASEWEB X CLOSE*/
+svg[title="Delete"]{
+  color: white;
+}
+
+/*BASEWEB ITEM SELECT MULTI*/
+span[data-baseweb="tag"]{
+  background: var(--secondary-color);
 }
