@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+@font-face {
+  font-family: Allianz;
+  src: url('./data/ALSANREG.otf');
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  width: calc(100vw - (100vw - 100%));  /*100vw not including scrollbar*/
+  height: 100vh;
+}
+
+#navbar{
+  font-family: Allianz;
+}
+
+.title{
+  font-family: Allianz;
+}
+
+.allianz{
+  font-family: Allianz;
+}
+
+#main-page{
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration:underline; 
+  cursor:pointer;  
+}
+
+:root{
+  --primary-color:rgb(0, 55, 129);
+  --secondary-color:#036cd5;
+  --input-height:7vh;
+}
+
+/*TAB BAR COLOR*/
+div[data-baseweb="tab-highlight"]{
+  background: var(--secondary-color) !important;
+}
+
+/*TAB FONT COLOR*/
+button[data-baseweb="tab"]{
+  color: var(--secondary-color) !important;
+}
+
+/*SELECT POLIZA*/
+div[data-baseweb="select"]{
+  height: min-content;
+  border-bottom:2px solid var(--secondary-color);
+  outline: none;
+  width: 30%;
+  height: var(--input-height);
+  background-color: rgb(241 245 249);
+}
+
+div[data-baseweb="select"] div{
+  border:0;
+  border-radius: 0;
+  color: var(--secondary-color);
+  background: transparent;
+}
+
+/*SELECT POLIZA OPTIONS*/
+ul[data-baseweb="menu"] div{
+  color: var(--primary-color);
+}
+
+/*SELECT POLIZA ARROW*/
+svg[data-baseweb="icon"]{
+  color: var(--primary-color);
+}
+
+/*INPUT TEXT FIELD MUI FONT COLOR*/
+.MuiFormLabel-root{
+  color: var(--secondary-color) !important;
+}
+
+/*INPUT TEXT FIELD MUI BORDER COLOR*/
+.MuiInputBase-input, .MuiFilledInput-root, .MuiFilledInput-input, .MuiInputBase-root, .MuiFormControl-root{
+  border-color: var(--secondary-color) !important;
+  border: 20px !important;
+  outline: none !important;
+  color: var(--primary-color) !important;
+}
+
+.MuiInputBase-root::after{
+  border-color: var(--secondary-color) !important;
+}
+
+/*INPUT TEXT FIELD MUI BG*/
+.MuiInputBase-root{
+  background-color: rgb(241 245 249) !important;
+  height: var(--input-height) !important;
+}
+
+
+/*BASEWEB NOTIFICATION*/
+div[data-baseweb="notification"]{
+  background: rgb(241 245 249);
+  color: var(--secondary-color);
+  animation: notice 1s linear;
+}
+
+@keyframes notice {
+  0%{
+    opacity: 0;
+  }100%{
+    opacity: 100%;
+  }
+}
+
+
+/*BASEWEB SPINNER*/
+i[role="progressbar"]{
+  width: 30px;
+  height: 30px;
+  border-top-color: var(--secondary-color);
+}
+
+/*MUI BUTTON CONTAINED*/
+.MuiButton-contained{
+  background-color: var(--secondary-color) !important;
+  height: 5vh;
+  box-shadow: none !important;
+}
