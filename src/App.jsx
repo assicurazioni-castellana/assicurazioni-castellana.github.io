@@ -20,7 +20,7 @@ function App() {
    <div className='w-full min-h-[100vh] bg-white flex flex-col gap-10 items-center'>
       <div id="navbar" className='w-full h-[7vh] bg-slate-200 flex flex-row items-center'>
         <div className='text-2xl text-primary ml-[10px] font-semibold'>Assicurazioni Castellana</div>
-        <img src={"../logo.png"} className='h-[5vh] ml-auto pointer-events-none select-none'></img>
+        <img src={"/logo.png"} className='h-[5vh] ml-auto pointer-events-none select-none'></img>
         <Button variant="contained" style={{marginLeft:"auto",marginRight:"10px"}} onClick={()=>preventivoRef.current.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })}>RICHIEDI UN PREVENTIVO</Button>
       </div>
 
